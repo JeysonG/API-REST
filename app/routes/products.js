@@ -113,7 +113,6 @@ router.get('/:id', (req, res) => {
 
         } else {
 
-            let put = "PUT";
             res.send("<html> <head> <title>" + product.name + "</title> </head> <body> <form action='/product/edit/" + product._id + "?_method=" + put + "' method='POST'> <h1> <strong>" + product.name + "</strong> <br> Cantidad: <strong>" + product.cant + "</strong> <input type='submit' value='Edit'> </form> <form action='/product/del/" + product._id + "?_method=DELETE' method='POST'> <input type='submit' value='Delete'> </form> </body> </html>");
 
         }

@@ -10,7 +10,9 @@ var data_post_maximo = 8 * 1024 * 1024;
 
 //Mostrar formulario
 router.get('/add', (req, res) => {
+
     res.sendFile(path.join(__dirname, '../views/addproduct.html'));
+
 });
 
 //Recibir informacion del form de productos
@@ -25,9 +27,16 @@ router.post('/add', (req, res) => {
         if(datos.length > data_post_maximo){
 
             this.pause();
-            res.end('Ha surgido un error');
-        }
 
+            res.json(
+                {
+
+                    message: "Ha surgido un error"
+
+                }
+            );
+
+        }
     });
 
     req.on('end', () => {
@@ -40,7 +49,6 @@ router.post('/add', (req, res) => {
         product.cant = objetoDatos.cant;
 
         //Promises
-
         let prom = require('./promises');
 
         prom.addProduct(product.cant).then((resultado) => {
@@ -50,17 +58,29 @@ router.post('/add', (req, res) => {
                 if(err){
     
                     console.log(err);
+                    return;
     
                 } else {
     
-                    res.send(resultado + "<html> <head> <title> Error </title> </head> <body> <a href='/product/list'> <input type='button' value='OK'> </a>");
-    
+                    res.status(200).json(
+                        {
+
+                            message: "Product Added"
+
+                        }
+                    );
                 }
             });
             
         }, (error) => {
 
-            res.send(error + "<html> <head> <title> Error </title> </head> <body> <a href='/product/add'> <input type='button' value='OK'> </a>");
+            res.json(
+                {
+
+                    message: error
+
+                }
+            );
 
         });
     });
@@ -77,20 +97,11 @@ router.get('/list', (req, res) => {
 
         } else {
 
-            let temp = "<html> <head> <title> Lista </title> </head> <body>";
-
-            let obj = [];
-
-            for(var i=0;i<product.length;i++){
-
-                obj[i] = "<a href='/product/"+ product[i]._id + "'><p>" + product[i].name + "</p>";
-
-                temp += obj[i];
-
-            }
-
-            temp += "</body> </html>";
-            res.send(temp);
+            res.status(200).json(
+                {
+                    products: product
+                }
+            );
 
         }
     });
@@ -108,7 +119,14 @@ router.get('/:id', (req, res) => {
 
         } else {
 
-            res.send(product.name + " Cantidad: " + product.cant);
+            res.status(200).json(
+                {
+
+                    name: product.name,
+                    cantidad: product.cant
+
+                }
+            )
 
         }
 
@@ -120,7 +138,9 @@ router.put('/edit/:id', (req, res) => {
 
     res.status(200).json(
         {
+
             message: "Updated Product"
+
         }
     );
 });
@@ -130,7 +150,9 @@ router.delete('/del/:id', (req, res) => {
 
     res.status(200).json(
         {
+
             message: "Deleted Product"
+
         }
     );
 });

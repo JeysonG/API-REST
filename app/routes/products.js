@@ -2,15 +2,20 @@ let express = require('express');
 let path = require('path');
 let queryString = require('querystring');
 let router = express.Router();
+let methodoverride = require('method-override');
 
 let Product = require('../models/product');
+
+router.use(methodoverride('_method'));
 
 // Soporte de memoria
 var data_post_maximo = 8 * 1024 * 1024;
 
 //Mostrar formulario
 router.get('/add', (req, res) => {
+
     res.sendFile(path.join(__dirname, '../views/addproduct.html'));
+
 });
 
 //Recibir informacion del form de productos
@@ -108,7 +113,8 @@ router.get('/:id', (req, res) => {
 
         } else {
 
-            res.send(product.name + " Cantidad: " + product.cant);
+            let put = "PUT";
+            res.send("<html> <head> <title>" + product.name + "</title> </head> <body> <form action='/product/edit/" + product._id + "?_method=" + put + "' method='POST'> <h1> <strong>" + product.name + "</strong> <br> Cantidad: <strong>" + product.cant + "</strong> <input type='submit' value='Edit'> </form> <form action='/product/del/" + product._id + "?_method=DELETE' method='POST'> <input type='submit' value='Delete'> </form> </body> </html>");
 
         }
 

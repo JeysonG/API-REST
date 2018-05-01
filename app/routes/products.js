@@ -197,7 +197,7 @@ router.post('/del/:id', (req, res) => {
             res.send(product + "<html> <head> <title>Delete " + product.name + "</title> </head> <body> <form action='/product/del/" + product._id + "?_method=DELETE' method='POST'> <input type='submit' value='Delete'> <a href='/product/list'><input type='button' value='Cancel'> </a> </form> </body> </html>");
 
         }
-    });   
+    });    
 });
 
 // Delete product
